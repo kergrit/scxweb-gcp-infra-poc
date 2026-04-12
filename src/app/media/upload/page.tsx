@@ -20,39 +20,20 @@ export default function UploadPage() {
       setStatus('Please select a file to upload.');
       return;
     }
-    setStatus('Getting upload URL...');
+    setStatus('Uploading file...');
 
     try {
-      // 1. Get signed URL from our API
+      const formData = new FormData();
+      formData.append('file', file);
+
       const response = await fetch('/api/upload', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          filename: file.name,
-          contentType: file.type,
-        }),
+        body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get signed URL.');
-      }
-
-      const { url } = await response.json();
-      setStatus('Uploading file...');
-
-      // 2. Upload the file to the signed URL
-      const uploadResponse = await fetch(url, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error('File upload failed.');
+        const { error } = await response.json();
+        throw new Error(error || 'File upload failed.');
       }
 
       setStatus(`Upload successful! File ${file.name} is now in the bucket.`);

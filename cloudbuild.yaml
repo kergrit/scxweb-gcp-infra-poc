@@ -1,0 +1,47 @@
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${COMMIT_SHA}'
+      - '-t'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest'
+      - '.'
+
+  # Step 2: Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image=${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${COMMIT_SHA}'
+      - '--region=${_DEPLOY_REGION}'
+      - '--platform=managed'
+      - '--port=3000'
+      - '--service-account=${_SERVICE_ACCOUNT}'
+      - '--add-cloudsql-instances=${_CLOUD_SQL_INSTANCE}'
+      - '--set-secrets=APP_VERSION=APP_VERSION:latest,DB_USER=DB_USER:latest,DB_PASSWORD=DB_PASSWORD:latest,DB_NAME=DB_NAME:latest,CLOUD_SQL_CONNECTION_NAME=CLOUD_SQL_CONNECTION_NAME:latest,CDN_DOMAIN=CDN_DOMAIN:latest'
+      - '--set-env-vars=GCS_BUCKET_NAME=scx-scxweb-dev-gcs-bkk-001,GCP_PROJECT_ID=scx-scxweb-dev'
+      - '--allow-unauthenticated'
+      - '--project=${_AR_PROJECT_ID}'
+
+substitutions:
+  _AR_HOSTNAME: 'asia-southeast3-docker.pkg.dev'
+  _AR_PROJECT_ID: 'scx-scxweb-dev'
+  _AR_REPOSITORY: 'scx-scxweb-dev-ar-bkk-001'
+  _DEPLOY_REGION: 'asia-southeast3'
+  _SERVICE_NAME: 'scx-scxweb-dev-run-bkk-cms'
+  _SERVICE_ACCOUNT: 'scx-scxweb-dev-run-bkk-cms@scx-scxweb-dev.iam.gserviceaccount.com'
+  _CLOUD_SQL_INSTANCE: 'scx-scxweb-dev:asia-southeast3:scx-scxweb-dev-sql-bkk-001'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
