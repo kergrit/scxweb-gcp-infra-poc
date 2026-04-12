@@ -4,9 +4,9 @@ steps:
     args:
       - 'build'
       - '-t'
-      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${COMMIT_SHA}'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_IMAGE_NAME}:${COMMIT_SHA}'
       - '-t'
-      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:latest'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_IMAGE_NAME}:latest'
       - '.'
 
   # Step 2: Push to Artifact Registry
@@ -14,7 +14,7 @@ steps:
     args:
       - 'push'
       - '--all-tags'
-      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_IMAGE_NAME}'
 
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -23,7 +23,7 @@ steps:
       - 'run'
       - 'deploy'
       - '${_SERVICE_NAME}'
-      - '--image=${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_SERVICE_NAME}:${COMMIT_SHA}'
+      - '--image=${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/${_IMAGE_NAME}:${COMMIT_SHA}'
       - '--region=${_DEPLOY_REGION}'
       - '--platform=managed'
       - '--port=3000'
@@ -39,6 +39,7 @@ substitutions:
   _AR_PROJECT_ID: 'scx-scxweb-dev'
   _AR_REPOSITORY: 'scx-scxweb-dev-ar-bkk-001'
   _DEPLOY_REGION: 'asia-southeast3'
+  _IMAGE_NAME: 'scx-scxweb-dev-run-bkk-poc'
   _SERVICE_NAME: 'scx-scxweb-dev-run-bkk-cms'
   _SERVICE_ACCOUNT: 'scx-scxweb-dev-run-bkk-cms@scx-scxweb-dev.iam.gserviceaccount.com'
   _CLOUD_SQL_INSTANCE: 'scx-scxweb-dev:asia-southeast3:scx-scxweb-dev-sql-bkk-001'
