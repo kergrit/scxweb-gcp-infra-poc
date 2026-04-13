@@ -28,9 +28,9 @@ steps:
       - '--platform=managed'
       - '--port=3000'
       - '--service-account=${_SERVICE_ACCOUNT}'
-      - '--add-cloudsql-instances=${_CLOUD_SQL_INSTANCE}'
-      - '--set-secrets=APP_VERSION=APP_VERSION:latest,DB_USER=DB_USER:latest,DB_PASSWORD=DB_PASSWORD:latest,DB_NAME=DB_NAME:latest,CLOUD_SQL_CONNECTION_NAME=CLOUD_SQL_CONNECTION_NAME:latest,CDN_DOMAIN=CDN_DOMAIN:latest'
-      - '--set-env-vars=GCS_BUCKET_NAME=scx-scxweb-dev-gcs-bkk-001,GCP_PROJECT_ID=scx-scxweb-dev'
+      - '--set-secrets=APP_VERSION=APP_VERSION:latest,DB_USER=DB_USER:latest,DB_PASSWORD=DB_PASSWORD:latest,DB_NAME=DB_NAME:latest,CDN_DOMAIN=CDN_DOMAIN:latest'
+      - '--set-env-vars=GCS_BUCKET_NAME=scx-scxweb-dev-gcs-bkk-001,GCP_PROJECT_ID=scx-scxweb-dev,DB_HOST=10.63.165.2'
+      - '--clear-cloudsql-instances'
       - '--allow-unauthenticated'
       - '--project=${_AR_PROJECT_ID}'
 
@@ -42,7 +42,6 @@ substitutions:
   _IMAGE_NAME: 'scx-scxweb-dev-run-bkk-poc'
   _SERVICE_NAME: 'scx-scxweb-dev-run-bkk-cms'
   _SERVICE_ACCOUNT: 'scx-scxweb-dev-run-bkk-cms@scx-scxweb-dev.iam.gserviceaccount.com'
-  _CLOUD_SQL_INSTANCE: 'scx-scxweb-dev:asia-southeast3:scx-scxweb-dev-sql-bkk-001'
 
 options:
   logging: CLOUD_LOGGING_ONLY
