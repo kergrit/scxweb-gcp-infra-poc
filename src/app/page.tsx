@@ -41,7 +41,7 @@ export default async function Home() {
             .
           </li>
           <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
+            Save and see your changes instantly. NOW YOU SEE ME !!
           </li>
           <li>[POC] CI/CD with connect github repository to cloud run</li>
           <li>[POC] Secret Manager. APP_VERSION: <code className="bg-gray-200 dark:bg-gray-700 font-mono font-semibold px-1 py-0.5 rounded">{process.env.APP_VERSION || "N/A"}</code></li>
