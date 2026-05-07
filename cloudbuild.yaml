@@ -29,7 +29,7 @@ steps:
       - '--port=3000'
       - '--service-account=${_SERVICE_ACCOUNT}'
       - '--set-secrets=APP_VERSION=APP_VERSION:latest,DB_USER=DB_USER:latest,DB_PASSWORD=DB_PASSWORD:latest,DB_NAME=DB_NAME:latest,CDN_DOMAIN=CDN_DOMAIN:latest'
-      - '--set-env-vars=GCS_BUCKET_NAME=scx-scxweb-dev-gcs-bkk-001,GCP_PROJECT_ID=scx-scxweb-dev,DB_HOST=10.63.165.2'
+      - '--set-env-vars=GCS_BUCKET_NAME=${_GCS_BUCKET_NAME},GCP_PROJECT_ID=${PROJECT_ID},DB_HOST=${_DB_HOST}'
       - '--clear-cloudsql-instances'
       - '--allow-unauthenticated'
       - '--project=${_AR_PROJECT_ID}'
@@ -42,6 +42,8 @@ substitutions:
   _IMAGE_NAME: 'scx-scxweb-dev-run-bkk-poc'
   _SERVICE_NAME: 'scx-scxweb-dev-run-bkk-cms'
   _SERVICE_ACCOUNT: 'scx-scxweb-dev-run-bkk-cms@scx-scxweb-dev.iam.gserviceaccount.com'
+  _GCS_BUCKET_NAME: 'scx-scxweb-dev-gcs-bkk-001'
+  _DB_HOST: '10.63.165.2'
 
 options:
   logging: CLOUD_LOGGING_ONLY
